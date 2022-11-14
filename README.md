@@ -1,4 +1,4 @@
-# PLACEHOLDER TITLE
+# CS361 Wrestling Project
 
 ## Build Instructions
 
@@ -9,8 +9,8 @@ cmake ../cpp -DCMAKE_BUILD_TYPE=Release
 cmake --build . --parallel 4
 ```
 
-There will be two binaries: `run_tests` and `placeholder_name`.
-`run_tests` will run the tests. `placeholder_name` will begin a simulation.
+There will be two binaries: `run_tests` and `wrestling`.
+`run_tests` will run the tests. `wrestling` will begin a simulation.
 
 ## Building Doxygen Documentation
 

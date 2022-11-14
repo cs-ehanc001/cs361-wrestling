@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(placeholder_name LANGUAGES CXX)
+project(wrestling LANGUAGES CXX)
 set(standard 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
