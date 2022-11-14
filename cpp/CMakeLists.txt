@@ -59,9 +59,9 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 elseif(MSVC)
   message("-- Using MSVC")
-  message("-- WARNING: Use of MSVC is unsupported")
-  message("-- WARNING: Use of MSVC is unsupported")
-  message("-- WARNING: Use of MSVC is unsupported")
+  message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
+  message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
+  message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   # Untested, unsupported
 endif()
 
