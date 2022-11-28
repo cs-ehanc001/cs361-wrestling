@@ -89,9 +89,12 @@ inline void run_test(const std::string_view name, TestFunc&& test_func)
   }
 }
 
+template <typename Func>
 inline void test_section(const std::string_view section_name,
-                         const std::function<void()>& section_func)
+                         Func&& section_func)
 {
+  static_assert(std::is_invocable_r_v<void, Func>);
+
   std::cout << '\n';
   std::cout << HEADER_COLOR << section_name << ':' << supl::RESET << '\n';
   section_func();
