@@ -1,12 +1,12 @@
-#ifndef EHANC_UTILS_TERMCOLORS_H
-#define EHANC_UTILS_TERMCOLORS_H
+#ifndef SUPPLEMENTARIES_TERMCOLORS_H
+#define SUPPLEMENTARIES_TERMCOLORS_H
 
 #include <string_view>
 
 // Make doxygen ignore this file
 /// @cond
 
-namespace ehanc {
+namespace supl {
 
 constexpr inline std::string_view FG_BLACK   = "\033[1;30m";
 constexpr inline std::string_view FG_RED     = "\033[1;31m";
@@ -26,6 +26,6 @@ constexpr inline std::string_view BG_CYAN    = "\033[1;46m";
 constexpr inline std::string_view BG_WHITE   = "\033[1;47m";
 constexpr inline std::string_view RESET      = "\033[1;0m";
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

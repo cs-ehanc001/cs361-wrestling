@@ -1,14 +1,15 @@
-#ifndef EHANC_UTILS_METAPROGRAMMING_HPP
-#define EHANC_UTILS_METAPROGRAMMING_HPP
+#ifndef SUPPLEMENTARIES_METAPROGRAMMING_HPP
+#define SUPPLEMENTARIES_METAPROGRAMMING_HPP
 
 #include <iterator>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
-namespace ehanc {
+namespace supl {
 
-// type_identity
+///////////////////////////////////////////// type_identity
+
 /* {{{ doc */
 /**
  * @brief Identity metafunction. This version is redundant if using
@@ -20,16 +21,21 @@ struct type_identity {
   using type = T;
 };
 
-/* {{{ doc */
-/**
- * @brief Helper alias template to make using the `type_identity`
- * metafunction less verbose and cumbersome.
- */
-/* }}} */
-template <typename T>
-using type_identity_t = typename ::ehanc::type_identity<T>::type;
+///////////////////////////////////////////// index_constant
 
-// sum_type
+template <std::size_t idx>
+struct index_constant : std::integral_constant<std::size_t, idx> {};
+
+///////////////////////////////////////////// index_pair
+
+template <std::size_t t_first, std::size_t t_second>
+struct index_pair {
+  constexpr inline static std::size_t first {t_first};
+  constexpr inline static std::size_t second {t_second};
+};
+
+///////////////////////////////////////////// sum_type
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine the type resulting from
@@ -38,7 +44,7 @@ using type_identity_t = typename ::ehanc::type_identity<T>::type;
 /* }}} */
 template <typename... Ts>
 struct sum_type
-    : ::ehanc::type_identity<decltype((... + std::declval<Ts>()))> {};
+    : ::supl::type_identity<decltype((... + std::declval<Ts>()))> {};
 
 /* {{{ doc */
 /**
@@ -47,9 +53,10 @@ struct sum_type
  */
 /* }}} */
 template <typename... Ts>
-using sum_type_t = typename ::ehanc::sum_type<Ts...>::type;
+using sum_type_t = typename ::supl::sum_type<Ts...>::type;
 
-// is_type_in_pack
+///////////////////////////////////////////// is_type_in_pack
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if type T is present in pack.
@@ -77,9 +84,10 @@ struct is_type_in_pack<T> : std::false_type {};
 /* }}} */
 template <typename T, typename... Pack>
 constexpr inline bool is_type_in_pack_v =
-    ::ehanc::is_type_in_pack<T, Pack...>::value;
+    ::supl::is_type_in_pack<T, Pack...>::value;
 
-// peel_first
+///////////////////////////////////////////// peel_first
+
 /* {{{ doc */
 /**
  * @brief Metafunction to return first type in a pack. Empty pack
@@ -87,7 +95,7 @@ constexpr inline bool is_type_in_pack_v =
  */
 /* }}} */
 template <typename... Pack>
-struct peel_first : ::ehanc::type_identity<void> {};
+struct peel_first : ::supl::type_identity<void> {};
 
 /* {{{ doc */
 /**
@@ -96,7 +104,7 @@ struct peel_first : ::ehanc::type_identity<void> {};
  */
 /* }}} */
 template <typename First, typename... Pack>
-struct peel_first<First, Pack...> : ::ehanc::type_identity<First> {};
+struct peel_first<First, Pack...> : ::supl::type_identity<First> {};
 
 /* {{{ doc */
 /**
@@ -105,9 +113,10 @@ struct peel_first<First, Pack...> : ::ehanc::type_identity<First> {};
  */
 /* }}} */
 template <typename... Pack>
-using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
+using peel_first_t = typename ::supl::peel_first<Pack...>::type;
 
-// peel_last
+///////////////////////////////////////////// peel_last
+
 /* {{{ doc */
 /**
  * @brief Metafunction to return last type in a pack. Empty pack considered
@@ -115,7 +124,7 @@ using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-struct peel_last : ::ehanc::type_identity<void> {};
+struct peel_last : ::supl::type_identity<void> {};
 
 /* {{{ doc */
 /**
@@ -125,8 +134,7 @@ struct peel_last : ::ehanc::type_identity<void> {};
 /* }}} */
 template <typename First, typename... Pack>
 struct peel_last<First, Pack...>
-    : ::ehanc::type_identity<typename ::ehanc::peel_last<Pack...>::type> {
-};
+    : ::supl::type_identity<typename ::supl::peel_last<Pack...>::type> {};
 
 /* {{{ doc */
 /**
@@ -135,7 +143,7 @@ struct peel_last<First, Pack...>
  */
 /* }}} */
 template <typename Last>
-struct peel_last<Last> : ::ehanc::type_identity<Last> {};
+struct peel_last<Last> : ::supl::type_identity<Last> {};
 
 /* {{{ doc */
 /**
@@ -144,9 +152,10 @@ struct peel_last<Last> : ::ehanc::type_identity<Last> {};
  */
 /* }}} */
 template <typename... Pack>
-using peel_last_t = typename ::ehanc::peel_last<Pack...>::type;
+using peel_last_t = typename ::supl::peel_last<Pack...>::type;
 
-// is_pack_uniform
+///////////////////////////////////////////// is_pack_uniform
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -156,7 +165,7 @@ using peel_last_t = typename ::ehanc::peel_last<Pack...>::type;
 template <typename... Pack>
 struct is_pack_uniform
     : std::conditional_t<
-          (std::is_same_v<::ehanc::peel_first_t<Pack...>, Pack> && ...),
+          (std::is_same_v<::supl::peel_first_t<Pack...>, Pack> && ...),
           std::true_type, std::false_type> {};
 
 /* {{{ doc */
@@ -167,9 +176,10 @@ struct is_pack_uniform
 /* }}} */
 template <typename... Pack>
 constexpr inline bool is_pack_uniform_v =
-    ::ehanc::is_pack_uniform<Pack...>::value;
+    ::supl::is_pack_uniform<Pack...>::value;
 
-// is_pack_only
+///////////////////////////////////////////// is_pack_only
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -178,8 +188,8 @@ constexpr inline bool is_pack_uniform_v =
 /* }}} */
 template <typename T, typename... Pack>
 struct is_pack_only
-    : std::conjunction<::ehanc::is_pack_uniform<Pack...>,
-                       std::is_same<T, ehanc::peel_first_t<Pack...>>> {};
+    : std::conjunction<::supl::is_pack_uniform<Pack...>,
+                       std::is_same<T, supl::peel_first_t<Pack...>>> {};
 
 /* {{{ doc */
 /**
@@ -199,9 +209,10 @@ struct is_pack_only<T> : std::false_type {};
 /* }}} */
 template <typename T, typename... Pack>
 constexpr inline bool is_pack_only_v =
-    ::ehanc::is_pack_only<T, Pack...>::value;
+    ::supl::is_pack_only<T, Pack...>::value;
 
-// is_iterable
+///////////////////////////////////////////// is_iterable
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type can be iterated over.
@@ -230,9 +241,10 @@ struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T&>())),
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_iterable_v = ::ehanc::is_iterable<T>::value;
+constexpr inline bool is_iterable_v = ::supl::is_iterable<T>::value;
 
-// is_iterator
+///////////////////////////////////////////// is_iterator
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type meets the minimum criteria
@@ -262,9 +274,10 @@ struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_iterator_v = ::ehanc::is_iterator<T>::value;
+constexpr inline bool is_iterator_v = ::supl::is_iterator<T>::value;
 
-// is_bidirectional
+///////////////////////////////////////////// is_bidirectional
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type supports pre-increment and
@@ -294,9 +307,10 @@ struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>()),
 /* }}} */
 template <typename T>
 constexpr inline bool is_bidirectional_v =
-    ::ehanc::is_bidirectional<T>::value;
+    ::supl::is_bidirectional<T>::value;
 
-// is_random_access
+///////////////////////////////////////////// is_random_access
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if an iterator is a
@@ -329,9 +343,10 @@ struct is_random_access<
 /* }}} */
 template <typename T>
 constexpr inline bool is_random_access_v =
-    ::ehanc::is_random_access<T>::value;
+    ::supl::is_random_access<T>::value;
 
-// is_tuple
+///////////////////////////////////////////// is_tuple
+
 namespace impl {
 /* {{{ doc */
 /**
@@ -358,7 +373,7 @@ struct is_tuple_impl<std::tuple<Ts...>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_tuple : ::ehanc::impl::is_tuple_impl<std::decay_t<T>> {};
+struct is_tuple : ::supl::impl::is_tuple_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -367,9 +382,10 @@ struct is_tuple : ::ehanc::impl::is_tuple_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_tuple_v = ::ehanc::is_tuple<T>::value;
+constexpr inline bool is_tuple_v = ::supl::is_tuple<T>::value;
 
-// is_pair
+///////////////////////////////////////////// is_pair
+
 namespace impl {
 /* {{{ doc */
 /**
@@ -396,7 +412,7 @@ struct is_pair_impl<std::pair<Ts...>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
+struct is_pair : ::supl::impl::is_pair_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -405,20 +421,193 @@ struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_pair_v = ::ehanc::is_pair<T>::value;
+constexpr inline bool is_pair_v = ::supl::is_pair<T>::value;
 
-// is_printable
+///////////////////////////////////////////// is_printable
+
+/* {{{ doc */
+/**
+ * @brief Determines if `operator<<(std::ostream&, T)` is defined for a type `T`.
+ */
+/* }}} */
 template <typename T, typename = void>
 struct is_printable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if `operator<<(std::ostream&, T)` is defined for a type `T`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T>
 struct is_printable<T, std::void_t<decltype(std::declval<std::ostream&>()
                                             << std::declval<T>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_printable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T>
-constexpr inline bool is_printable_v = ::ehanc::is_printable<T>::value;
+constexpr inline bool is_printable_v = ::supl::is_printable<T>::value;
 
-} // namespace ehanc
+///////////////////////////////////////////// are_equality_comparable
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator==`.
+ */
+/* }}} */
+template <typename T, typename U, typename = void>
+struct are_equality_comparable : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator==`.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T, typename U>
+struct are_equality_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_equality_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename U>
+constexpr inline bool are_equality_comparable_v =
+    ::supl::are_equality_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_less_comparable
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<`.
+ */
+/* }}} */
+template <typename T, typename U, typename = void>
+struct are_less_comparable : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<`.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T, typename U>
+struct are_less_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() < std::declval<U>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_less_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename U>
+constexpr inline bool are_less_comparable_v =
+    ::supl::are_less_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_less_eq_comparable
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<=`.
+ */
+/* }}} */
+template <typename T, typename U, typename = void>
+struct are_less_eq_comparable : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<=`.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T, typename U>
+struct are_less_eq_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() <= std::declval<U>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_less_eq_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename U>
+constexpr inline bool are_less_eq_comparable_v =
+    ::supl::are_less_eq_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_less_comparable
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>`.
+ */
+/* }}} */
+template <typename T, typename U, typename = void>
+struct are_greater_comparable : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>`.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T, typename U>
+struct are_greater_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() > std::declval<U>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_greater_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename U>
+constexpr inline bool are_greater_comparable_v =
+    ::supl::are_greater_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_greater_eq_comparable
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>=`.
+ */
+/* }}} */
+template <typename T, typename U, typename = void>
+struct are_greater_eq_comparable : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>=`.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T, typename U>
+struct are_greater_eq_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() >= std::declval<U>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_greater_eq_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename U>
+constexpr inline bool are_greater_eq_comparable_v =
+    ::supl::are_greater_eq_comparable<T, U>::value;
+
+} // namespace supl
 
 #endif
