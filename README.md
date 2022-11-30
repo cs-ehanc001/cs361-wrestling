@@ -35,6 +35,6 @@ The exceptions are as follows:
 * ./cpp/.clang-*
     * These two files were created by dumping the default configuration of the respective tool,
     then I made adjustments to suit my needs
-* ./cpp/inc/supl/*
+* ./cpp/lib/supplementaries
     * These files were written entirely by me, however, development of them has been done in a separate git repository,
     which can be found here: https://gitlab.com/theomegacarrot/cpp-supplementaries
