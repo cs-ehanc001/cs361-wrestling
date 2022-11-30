@@ -79,12 +79,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 include_directories(inc)
+add_subdirectory(lib/supplementaries)
 
 # Main executable
 file(GLOB_RECURSE source_files ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 list(REMOVE_ITEM source_files ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp ${source_files})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${standard})
+target_link_libraries(${PROJECT_NAME} PRIVATE supplementaries)
 
 # Test executable
 set(test_exe_name run_tests)
@@ -92,3 +94,4 @@ file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 add_executable(${test_exe_name} ${source_files} ${test_files})
 target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
 set_property(TARGET ${test_exe_name} PROPERTY CXX_STANDARD ${standard})
+target_link_libraries(${test_exe_name} PRIVATE supplementaries)

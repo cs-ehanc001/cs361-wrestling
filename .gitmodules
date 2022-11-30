@@ -1,0 +1,3 @@
+[submodule "cpp/lib/supplementaries"]
+	path = cpp/lib/supplementaries
+	url = git@gitlab.com:TheOmegaCarrot/cpp-supplementaries
