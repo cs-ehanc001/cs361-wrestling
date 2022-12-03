@@ -3,4 +3,4 @@
 	url = git@gitlab.com:TheOmegaCarrot/cpp-supplementaries
 [submodule "ext/supplementaries"]
 	path = ext/supplementaries
-	url = https://gitlab.com/theomegacarrot/cpp-supplementaries
+	url = https://gitlab.com/theomegacarrot/supplementaries
